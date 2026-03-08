@@ -116,11 +116,9 @@ body{background:transparent;display:flex;align-items:center;justify-content:cent
   </div>
 </div>
 
-<div class="paw-overlay" id="pawOverlay" onclick="pawBg(event)">
-  <div class="paw-vbox">
-    <button class="paw-cls" onclick="pawClose()">&#x2715;</button>
-    <video id="pawVid" autoplay playsinline muted loop></video>
-  </div>
+<div class="paw-vzone" id="pawvzone">
+  <div class="paw-cls" onclick="pawClose()">&#10005;</div>
+  <video id="pawvid" playsinline controls></video>
 </div>
 
 <script>
