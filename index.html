@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UGC</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:transparent;display:block;min-height:unset;padding:8px;font-family:Arial,sans-serif}
+.paw-ugc{width:100%;max-width:420px;margin:0 auto;background:transparent;padding:4px 0}
+.paw-top{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:12px}
+.paw-top span{font-size:10px;font-weight:700;color:#555;letter-spacing:.08em;text-transform:uppercase}
+.paw-dot{width:4px;height:4px;border-radius:50%;background:#3a8c3f;display:inline-block}
+.paw-bubbles{display:flex;align-items:center;justify-content:center}
+.paw-bw{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;flex:1;padding:0 4px}
+.paw-bubble{width:72px;height:72px;border-radius:50%;overflow:hidden;position:relative;border:2.5px solid #e0e0e0;transition:all .22s;background:#f5f5f5;flex-shrink:0}
+.paw-bubble img{width:100%;height:100%;object-fit:cover;filter:brightness(.68);transition:filter .22s;display:block}
+.paw-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.paw-play div{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.95);display:flex;align-items:center;justify-content:center;font-size:10px;padding-left:2px;color:#3a8c3f;box-shadow:0 1px 6px rgba(0,0,0,.2)}
+.paw-bubble.on{border-color:#3a8c3f;box-shadow:0 0 0 3px rgba(58,140,63,.15);transform:scale(1.06)}
+.paw-bubble.on img{filter:brightness(1)}
+.paw-bubble.on .paw-play{display:none}
+.paw-ln{color:#1a1a1a;font-weight:700;font-size:11px;text-align:center;line-height:1.3}
+.paw-ls{color:#999;font-size:10px;text-align:center}
+.paw-bw.on .paw-ln{color:#3a8c3f}
+.paw-sep{width:1px;height:44px;background:#ebebeb;flex-shrink:0;align-self:center}
+.paw-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:99999;align-items:center;justify-content:center}
+.paw-overlay.open{display:flex}
+.paw-vbox{position:relative;width:92vw;max-width:340px;border-radius:16px;overflow:hidden;background:#000}
+.paw-vbox video{width:100%;display:block;height:80vh;object-fit:cover}
+.paw-cls{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.7);border:2px solid rgba(255,255,255,.3);color:white;font-size:17px;cursor:pointer;z-index:10;display:flex;align-items:center;justify-content:center}
+</style>
+</head>
+<body>
+<div class="paw-ugc">
+  <div class="paw-top">
+    <div class="paw-dot"></div>
+    <span>Elles ont essayé · Elles ont adoré</span>
+    <div class="paw-dot"></div>
+  </div>
+  <div class="paw-bubbles">
+    <div class="paw-bw" id="pw1" onclick="pawOpen(1)">
+      <div class="paw-bubble" id="pb1">
+        <img src="https://vumbnail.com/1171683321.jpg" alt="">
+        <div class="paw-play"><div>&#9654;</div></div>
+      </div>
+      <div class="paw-ln">Léa &amp; Caramel</div>
+      <div class="paw-ls">65 ans</div>
+    </div>
+    <div class="paw-sep"></div>
+    <div class="paw-bw" id="pw2" onclick="pawOpen(2)">
+      <div class="paw-bubble" id="pb2">
+        <img src="https://vumbnail.com/1171683360.jpg" alt="">
+        <div class="paw-play"><div>&#9654;</div></div>
+      </div>
+      <div class="paw-ln">Marie &amp; Filou</div>
+      <div class="paw-ls">41 ans</div>
+    </div>
+    <div class="paw-sep"></div>
+    <div class="paw-bw" id="pw3" onclick="pawOpen(3)">
+      <div class="paw-bubble" id="pb3">
+        <img src="https://vumbnail.com/1171683345.jpg" alt="">
+        <div class="paw-play"><div>&#9654;</div></div>
+      </div>
+      <div class="paw-ln">Sophie &amp; Rex</div>
+      <div class="paw-ls">28 ans</div>
+    </div>
+  </div>
+</div>
+<div class="paw-overlay" id="pawOverlay" onclick="pawBg(event)">
+  <div class="paw-vbox">
+    <video id="pawVid" playsinline muted></video>
+    <div class="paw-cls" onclick="pawClose()">&#x2715;</div>
+  </div>
+</div>
+<script>
+var pawSrcs={
+  1:'https://raw.githubusercontent.com/moecom33-spec/pawpuritypet-ugc/main/Woman_petting_dog_on_sofa_2fd225ccba%20(1).mp4',
+  2:'https://raw.githubusercontent.com/moecom33-spec/pawpuritypet-ugc/main/Woman_showing_dog_spray_a5dfed2c9f%20(1).mp4',
+  3:'https://raw.githubusercontent.com/moecom33-spec/pawpuritypet-ugc/main/Woman_uses_spray_on_dog_9611ba2a5b%20(1).mp4'
+};
+var pawCur=null;
+function pawOpen(n){
+  if(pawCur===n){pawClose();return}
+  if(pawCur){document.getElementById('pb'+pawCur).classList.remove('on');document.getElementById('pw'+pawCur).classList.remove('on')}
+  document.getElementById('pb'+n).classList.add('on');
+  document.getElementById('pw'+n).classList.add('on');
+  pawCur=n;
+  try{
+    var top=window.top;
+    if(top&&top!==window){
+      var ex=top.document.getElementById('pawTopOverlay');
+      if(ex)ex.remove();
+      var ov=top.document.createElement('div');
+      ov.id='pawTopOverlay';
+      ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:999999;display:flex;align-items:center;justify-content:center';
+      var bx=top.document.createElement('div');
+      bx.style.cssText='position:relative;width:92vw;max-width:340px;border-radius:16px;overflow:hidden;background:#000';
+      var vd=top.document.createElement('video');
+      vd.src=pawSrcs[n];vd.autoplay=true;vd.muted=true;vd.loop=true;vd.playsInline=true;
+      vd.style.cssText='width:100%;display:block;height:80vh;object-fit:cover';
+      var cl=top.document.createElement('div');
+      cl.innerHTML='&#x2715;';
+      cl.style.cssText='position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.7);border:2px solid rgba(255,255,255,.3);color:white;font-size:17px;cursor:pointer;z-index:10;display:flex;align-items:center;justify-content:center';
+      cl.onclick=function(){ov.remove();pawReset()};
+      ov.onclick=function(e){if(e.target===ov){ov.remove();pawReset()}};
+      bx.appendChild(vd);bx.appendChild(cl);ov.appendChild(bx);
+      top.document.body.appendChild(ov);vd.play();return;
+    }
+  }catch(e){}
+  var v=document.getElementById('pawVid');
+  v.src=pawSrcs[n];v.muted=true;
+  document.getElementById('pawOverlay').classList.add('open');
+  v.play();
+}
+function pawReset(){
+  if(pawCur){document.getElementById('pb'+pawCur).classList.remove('on');document.getElementById('pw'+pawCur).classList.remove('on')}
+  pawCur=null;
+}
+function pawClose(){
+  var v=document.getElementById('pawVid');
+  v.pause();v.src='';
+  document.getElementById('pawOverlay').classList.remove('open');
+  pawReset();
+}
+function pawBg(e){if(e.target===document.getElementById('pawOverlay'))pawClose()}
+</script>
+</body>
+</html>
